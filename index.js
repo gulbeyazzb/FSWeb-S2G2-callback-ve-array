@@ -154,10 +154,7 @@ console.log(UlkelerinKazanmaSayilari(KazananKisaltmalari(fifaData, Finaller)));
 /*  BONUS 2:  
 EnCokGolAtan() isminde bir fonksiyon yazın, `data` yı parametre olarak alsın ve Dünya kupası finallerinde en çok gol atan takımı döndürsün */
 
-function EnCokGolAtan(/* kodlar buraya */) {
-  /* kodlar buraya */
-}
-
+function EnCokGolAtan(data) {}
 /*  BONUS 3: 
 EnKotuDefans() adında bir fonksiyon yazın, `data` yı parametre olarak alsın ve Dünya kupasında finallerinde en çok golü yiyen takımı döndürsün*/
 
