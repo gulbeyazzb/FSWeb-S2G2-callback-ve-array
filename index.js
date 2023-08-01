@@ -113,10 +113,16 @@ function YillaraGoreKazananlar(
 	
 */
 
-function OrtalamaGolSayisi(/* kodlar buraya */) {
-  /* kodlar buraya */
+function OrtalamaGolSayisi(Finaller) {
+  const gameCount = Finaller.length; // "Final" olarak oynanan tüm maç sayısı bir değişkene atanır.
+  const totalGoals = Finaller.reduce((total, game) => {
+    //reduce ile Final maçlarındaki gol sayıları bir değişkende toplanır.
+    return total + game["Home Team Goals"] + game["Away Team Goals"];
+  }, 0);
+  const avarage = totalGoals / gameCount; //Toplam gol sayısı toplam maç sayısına bölünerek ortalaması bulunur.
+  return avarage.toFixed(2); //Parantez içine belirtilen {2} değeri ile toFixed metodu küsüratlı sayıların virgülden sonra kaç hane gösterileceğini belirtmiş olur.
 }
-
+// console.log(OrtalamaGolSayisi(Finaller(fifaData)));
 /// EKSTRA ÇALIŞMALAR ///
 
 /*  BONUS 1:  
@@ -125,10 +131,26 @@ function OrtalamaGolSayisi(/* kodlar buraya */) {
 	İpucu: "takım kısaltmaları" (team initials) için datada araştırma yapın!
 İpucu: `.reduce` Kullanın*/
 
-function UlkelerinKazanmaSayilari(/* kodlar buraya */) {
-  /* kodlar buraya */
+function KazananKisaltmalari(arrFifa, callback) {
+  const winners = callback(arrFifa).map((winner) => {
+    return winner["Home Team Goals"] > winner["Away Team Goals"]
+      ? winner["Home Team Initials"]
+      : winner["Away Team Initials"];
+  });
+  return winners;
 }
-
+function UlkelerinKazanmaSayilari(data) {
+  let result = {};
+  for (let i = 0; i < data.length; i++) {
+    if (result[data[i]] == undefined) {
+      result[data[i]] = 1;
+    } else {
+      result[data[i]] += 1;
+    }
+  }
+  return result;
+}
+console.log(UlkelerinKazanmaSayilari(KazananKisaltmalari(fifaData, Finaller)));
 /*  BONUS 2:  
 EnCokGolAtan() isminde bir fonksiyon yazın, `data` yı parametre olarak alsın ve Dünya kupası finallerinde en çok gol atan takımı döndürsün */
 
