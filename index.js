@@ -6,39 +6,25 @@ const { fifaData } = require("./fifa.js");
 	💡 İPUCU: Öncelikle datayı filtrelemek isteyebilirsiniz */
 
 //(a) 2014 Dünya kupası Finali Evsahibi takım ismi (dizide "Home Team Name" anahtarı)
-const homeTeam = fifaData.filter((data) => {
-  if (data.Year === 2014 && data.Stage === "Final") {
-    return data["Home Team Name"];
-  }
+const final2014 = fifaData.find((i) => {
+  return i.Year === 2014 && i.Stage === "Final";
 });
-//console.log(homeTeam);
+//console.log(final2014["Home Team Name"]);
 //(b) 2014 Dünya kupası Finali Deplasman takım ismi  (dizide "Away Team Name" anahtarı)
-const awayTeam = fifaData.filter((data) => {
-  if (data.Year === 2014 && data.Stage === "Final") {
-    return data["Away Team Name"];
-  }
-});
-//console.log(awayTeam);
+
+// console.log(final2014["Away Team Name"]);
 //(c) 2014 Dünya kupası finali Ev sahibi takım golleri (dizide "Home Team Goals" anahtarı)
-const goalsHome = fifaData.filter((data) => {
-  if (data.Year === 2014 && data.Stage === "Final") {
-    return data["Home Team Goals"];
-  }
-});
-//console.log(goalsHome);
+
+// console.log(final2014["Home Team Goals"]);
 //(d)2014 Dünya kupası finali Deplasman takım golleri  (dizide "Away Team Goals" anahtarı)
-const goalsAway = fifaData.filter((data) => {
-  if (data.Year === 2014 && data.Stage === "Final") {
-    return data["Away Team Goals"];
-  }
-});
-//console.log(goalsAway);
+// console.log(final2014["Away Team Goals"]);
 //(e) 2014 Dünya kupası finali kazananı*/
-const winner = fifaData.filter((data) => {
-  if (data.Year === 2014 && data.Stage === "Final") {
-    return data["Win conditions"];
-  }
-});
+let winner = "";
+if (final2014["Home Team Goals"] > final2014["Away Team Goals"]) {
+  winner = final2014["Home Team Name"];
+} else {
+  winner = final2014["Away Team Name"];
+}
 //console.log(winner);
 /*  Görev 2: 
 	Finaller adlı fonksiyonu kullanarak aşağıdakileri uygulayın:
@@ -63,10 +49,9 @@ function Finaller(arrFifa) {
 	*/
 
 function Yillar(arrFifa, callback) {
-  let years = [];
-  for (let i = 0; i < callback(arrFifa).length; i++) {
-    years.push(callback(arrFifa)[i].Year);
-  }
+  const years = callback(arrFifa).map((year) => {
+    return year.Year;
+  });
   return years;
 }
 //console.log(Yillar(fifaData, Finaller));
@@ -79,12 +64,14 @@ function Yillar(arrFifa, callback) {
 	4. Tüm kazanan ülkelerin isimlerini içeren `kazananlar` adında bir dizi(array) döndürecek(return)  */
 
 function Kazananlar(arrFifa, callback) {
-  //   const kazananlar = callback(arrFifa).filter((winner) => {
-  // 	winner["Home Team Goals"] > winner["Away Team Goals"] ?
-  //   return kazananlar;
-  //   })
+  const winners = callback(arrFifa).map((winner) => {
+    return winner["Home Team Goals"] > winner["Away Team Goals"]
+      ? winner["Home Team Name"]
+      : winner["Away Team Name"];
+  });
+  return winners;
 }
-
+//console.log(Kazananlar(fifaData, Finaller));
 /*  Görev 5: 
 	Bir higher-order fonksiyonu olan YillaraGoreKazananlar isimli fonksiyona aşağıdakileri uygulayın:
 	1. fifaData dizisini(array) fonksiyonunun birinci parametresi olarak alacak
@@ -96,10 +83,22 @@ function Kazananlar(arrFifa, callback) {
 	💡 İPUCU: her cümlenin adım 4'te belirtilen cümleyle birebir aynı olması gerekmektedir.
 */
 
-function YillaraGoreKazananlar(/* kodlar buraya */) {
-  /* kodlar buraya */
+function YillaraGoreKazananlar(
+  arrFifa,
+  cbk_finaller,
+  cbk_yillar,
+  cbk_kazananlar
+) {
+  const yillar = cbk_yillar(arrFifa, cbk_finaller);
+  const ulkeler = cbk_kazananlar(arrFifa, cbk_finaller);
+  let i = 0;
+  const yillaraGoreKazananlar = yillar.reduce((total, yil) => {
+    total.push(`${yil} yılında, ${ulkeler[i++]} dünya kupasını kazandı!`);
+    return total;
+  }, []);
+  return yillaraGoreKazananlar;
 }
-
+// console.log(YillaraGoreKazananlar(fifaData, Finaller, Yillar, Kazananlar));
 /*  Görev 6: 
 	Bir higher order fonksiyonu olan `OrtalamaGolSayisi` isimli fonksiyona aşağıdakileri uygulayın: 
 	1. Görev 2'de yazdığınız `Finaller` fonksiyonunu birinci parametre olarak alacak; 'fifaData' dizisini argüman olarak eklediğinizden emin olun
